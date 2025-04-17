@@ -1,0 +1,97 @@
+<h2>Events</h2>
+
+<div class="mb-3">
+  <!-- Link to create new event form -->
+  <!-- Show Create button only if user can manage events -->
+  <a *ngIf="canManageEvents$ | async" class="btn btn-success" routerLink="/events/new">Create New Event</a>
+</div>
+
+<!-- Search Input -->
+<div class="mb-3">
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Search events by name or location..."
+    [(ngModel)]="searchTerm"
+    (input)="filterEvents()"
+  />
+</div>
+
+<!-- Loading/Error messages -->
+<div *ngIf="isLoading" class="alert alert-info">Loading events...</div>
+<div *ngIf="error" class="alert alert-danger">
+  {{ error }}
+  <button class="btn btn-sm btn-warning ms-3" (click)="loadEvents()">Retry</button>
+</div>
+<div *ngIf="deleteError" class="alert alert-warning">{{ deleteError }}</div>
+<!-- Add registration status message area -->
+<div *ngIf="registrationStatus" [ngClass]="{'alert-success': !registrationError, 'alert-danger': registrationError}" class="alert alert-dismissible fade show">
+  {{ registrationStatus }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clearRegistrationStatus()"></button>
+</div>
+
+
+<!-- Scrollable Events List -->
+<!-- Show list if NOT loading, NO error, and there are filtered events -->
+<div *ngIf="!isLoading && !error && filteredEvents.length > 0">
+  <!-- Using event cards -->
+  <div class="event-card" *ngFor="let event of filteredEvents" [attr.data-event-id]="event.id">
+    <div class="event-header">
+      <h3>{{ event.name }}</h3>
+      <!-- <h3>{{ event.description }}</h3> -->
+      <!-- <h3>{{ event.assignedVolunteerIds }}</h3> -->
+      <!-- <h3>{{ event.assignedVolunteers}}</h3> -->
+      <p class="event-location">{{ event.location || 'N/A' }}</p>
+    </div>
+    <div class="event-body">
+      <p><strong>Start:</strong> {{ event.startDateTime | date:'yyyy-MM-dd HH:mm' }}</p>
+      <p><strong>End:</strong> {{ event.endDateTime | date:'yyyy-MM-dd HH:mm' }}</p>
+      <p><strong>Slots:</strong> {{ event.slotsAvailable != null ? event.slotsAvailable : 'Unlimited' }}</p>
+      <!-- Optionally show Registered count if available from backend -->
+      <!-- <p *ngIf="event.registeredCount != null"><strong>Registered:</strong> {{ event.registeredCount }}</p> -->
+    </div>
+    <div class="event-footer">
+      <!-- View button is always visible -->
+      <a class="btn btn-sm btn-info me-1" [routerLink]="['/events', event.id]">View</a>
+
+      <!-- Edit and Delete buttons only visible if user can manage events -->
+      <ng-container *ngIf="canManageEvents$ | async">
+        <a class="btn btn-sm btn-primary me-1" [routerLink]="['/events', event.id, 'edit']">Edit</a>
+        <button (click)="deleteEvent(event.id, event.name)" class="btn btn-danger btn-sm me-1">Delete</button> <!-- Added margin -->
+              <ng-container *ngIf="deleteError">
+                <div class="alert alert-danger mt-2">
+                  {{ deleteError }}
+                </div>
+              </ng-container>
+          
+      </ng-container>
+
+      <!-- Register button - Visible if:
+           1. User is logged in (checked via isAuthenticated$)
+           2. User CANNOT manage events (i.e., not admin/organizer)
+           3. User is NOT already registered for THIS event
+           4. (Optional but recommended) Event has slots available or unlimited slots
+           5. Registration is not currently in progress for this event
+      -->
+      <button *ngIf="(isAuthenticated$ | async) && !(canManageEvents$ | async) && !isRegistered(event.id) && hasAvailableSlots(event) && !isRegistering(event.id)"
+              (click)="registerForEvent(event.id)"
+              class="btn btn-sm btn-success">
+        Register
+      </button>
+
+      <!-- Show "Already Registered" or "No Slots" instead of Register button -->
+       <span *ngIf="(isAuthenticated$ | async) && !(canManageEvents$ | async) && isRegistered(event.id)" class="badge bg-secondary me-1">Registered</span>
+       <span *ngIf="(isAuthenticated$ | async) && !(canManageEvents$ | async) && !isRegistered(event.id) && !hasAvailableSlots(event)" class="badge bg-warning text-dark">No Slots</span>
+       <!-- Show loading spinner/text while registering -->
+       <span *ngIf="isRegistering(event.id)" class="spinner-border spinner-border-sm text-success" role="status" aria-hidden="true"></span>
+       <span *ngIf="isRegistering(event.id)"> Registering...</span>
+
+    </div>
+  </div>
+</div>
+
+<!-- No events / No results messages -->
+<div *ngIf="!isLoading && !error && filteredEvents.length === 0">
+    <p *ngIf="allEvents.length === 0">No events found.</p>
+    <p *ngIf="allEvents.length > 0">No events match your search criteria "{{ searchTerm }}".</p>
+</div>

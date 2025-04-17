@@ -1,0 +1,95 @@
+<div class="container mt-4">
+
+    <!-- Logged OUT View -->
+    <ng-container *ngIf="!authService.isUserLoggedIn()">
+      <div class="jumbotron">
+        <h1 class="display-4">Welcome to the Volunteer Management Portal!</h1>
+        <p class="lead">Connecting dedicated volunteers with meaningful opportunities.</p>
+        <hr class="my-4">
+        <p>Help us make a difference in the community. Log in to see available shifts or sign up to become a volunteer.</p>
+        <a class="btn btn-primary btn-lg me-2" routerLink="/login" role="button">Login</a>
+        <!-- Add a registration button if you have that feature -->
+        <!-- <a class="btn btn-secondary btn-lg" routerLink="/register" role="button">Register</a> -->
+      </div>
+      <div>
+        <h2>Our Mission</h2>
+        <p>
+          [Your organization's mission statement here...] Lorem ipsum dolor sit amet,
+          consectetur adipiscing elit. Quisque nisl eros, pulvinar facilisis justo
+          mollis, auctor consequat urna.
+        </p>
+        <h2>Why Volunteer?</h2>
+        <p>
+          [Benefits of volunteering with your organization...] Morbi purus libero,
+          faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent
+          elementum hendrerit tortor.
+        </p>
+      </div>
+    </ng-container>
+  
+    <!-- Logged IN View -->
+    <ng-container *ngIf="authService.isUserLoggedIn()">
+      <!-- Loading Indicator -->
+      <div *ngIf="isLoading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p>Loading your information...</p>
+      </div>
+  
+      <!-- Error Message -->
+      <div *ngIf="errorMessage && !isLoading" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+  
+      <!-- User Data Display -->
+      <!-- ... inside the Logged IN View ... -->
+<!-- User Data Display -->
+ <div *ngIf="!isLoading && !errorMessage">
+
+    <!-- ***** ENSURE THIS NG-CONTAINER OR DIV EXISTS ***** -->
+    <ng-container *ngIf="userData as user">
+        <h1>Welcome back, {{userData.name }}!</h1>  
+      <!-- Example: Dashboard specific to role -->
+      <!--<div *ngIf="user.role === 'ROLE_ADMIN'" class="alert alert-info">
+        You are logged in as an Administrator...
+      </div>-->
+      <!-- Other elements using userData. Tthey are now safely inside the *ngIf="userData" block -->
+      <!--<ul class="list-group mb-4">
+         
+      </ul> -->
+
+      <div class="jumbotron">
+        <h1 class="display-4">Welcome to the Volunteer Management Portal!</h1>
+        <p class="lead">Connecting dedicated volunteers with meaningful opportunities.</p>
+        <hr class="my-4">
+        <p>Help us make a difference in the community. Log in to see available shifts or sign up to become a volunteer.</p>
+        <!-- Add a registration button if you have that feature -->
+        <!-- <a class="btn btn-secondary btn-lg" routerLink="/register" role="button">Register</a> -->
+      </div>
+      <div>
+        <h2>Our Mission</h2>
+        <p>
+          [Your organization's mission statement here...] Lorem ipsum dolor sit amet,
+          consectetur adipiscing elit. Quisque nisl eros, pulvinar facilisis justo
+          mollis, auctor consequat urna.
+        </p>
+        <h2>Why Volunteer?</h2>
+        <p>
+          [Benefits of volunteering with your organization...] Morbi purus libero,
+          faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent
+          elementum hendrerit tortor.
+        </p>
+      </div>
+    </ng-container> <!-- ***** END OF *ngIf="userData" BLOCK ***** -->
+  
+    <!-- Fallback if userData is null after loading -->
+    <div *ngIf="!userData && !isLoading"> <!-- Added !isLoading check here -->
+       <p>Could not display user information.</p>
+    </div>
+  
+    <button class="btn btn-outline-secondary mt-3" (click)="logout()">Logout</button>
+  </div>
+    </ng-container>
+  
+  </div>

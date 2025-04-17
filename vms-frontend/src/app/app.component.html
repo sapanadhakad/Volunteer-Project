@@ -1,0 +1,122 @@
+<!-- app.component.html -->
+
+<div class="d-flex flex-column min-vh-100">
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/home">VolunteerApp</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Left-aligned Navigation Links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home" routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}">Home</a>
+          </li>
+          
+
+          <!-- Conditional Links Section -->
+          <ng-container *ngIf="isLoggedIn$ | async"> <!-- Check Login Status first -->
+            <ng-container *ngIf="roles$ | async as currentRoles"> <!-- Get Roles Array -->
+
+              <!-- Links for Admin OR Organizer -->
+              <ng-container *ngIf="currentRoles.includes('ROLE_ADMIN') || currentRoles.includes('ROLE_ORGANIZER')">
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/volunteers" routerLinkActive="active">Manage Volunteers</a>
+                </li>
+                <!-- <li class="nav-item">
+                  <a class="nav-link" routerLink="/events" routerLinkActive="active">Event</a>
+                </li> -->
+                <li class="nav-item">
+                  <a class="nav-link" routerLink="/events/new" routerLinkActive="active">Create Event</a>
+                </li>
+              </ng-container>
+
+              <!-- Link ONLY for Organizer -->
+              <li class="nav-item" *ngIf="currentRoles.includes('ROLE_ORGANIZER')">
+                <a class="nav-link" routerLink="/manage-organized-events" routerLinkActive="active">
+                  Manage My Events
+                </a>
+              </li>
+
+              <!-- Link ONLY for Volunteer -->
+              <li class="nav-item" *ngIf="currentRoles.includes('ROLE_VOLUNTEER')">
+                 <!-- Get Volunteer ID -->
+                 <ng-container *ngIf="currentVolunteerId$ | async as volId; else volunteerIdMissing">
+                    <!-- Ensure volId is truthy (not null/0) before creating link -->
+                    <a class="nav-link" *ngIf="volId" [routerLink]="['/manage-registered-events', volId]" routerLinkActive="active">
+                      My Registered Events
+                    </a>
+                 </ng-container>
+                 <ng-template #volunteerIdMissing>
+                    <!-- Show disabled link only if ID is missing but IS a volunteer -->
+                    <span class="nav-link disabled">(My Registered Events unavailable)</span>
+                 </ng-template>
+              </li>
+
+              <!-- My Profile link visible to ALL logged-in users -->
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/profile" routerLinkActive="active">My Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/events" routerLinkActive="active">Event</a>
+              </li>
+              
+
+            </ng-container> <!-- End roles$ check -->
+          </ng-container> <!-- End isLoggedIn$ check -->
+
+        </ul>
+
+        <!-- Right-aligned Actions (Login/Register/Logout/Username) -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+          <!-- Login/Register visible when NOT logged in -->
+          <li class="nav-item" *ngIf="!(isLoggedIn$ | async)">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+          </li>
+          <li class="nav-item" *ngIf="!(isLoggedIn$ | async)">
+            <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
+          </li>
+
+          <!-- Username and Logout visible when logged in -->
+          <li class="nav-item d-flex align-items-center" *ngIf="isLoggedIn$ | async">
+            <!-- Display username if available -->
+            <span class="navbar-text me-3" *ngIf="userName$ | async as name">
+              Welcome, {{ name }}
+            </span>
+            <!-- Fallback if username is null/empty but user is logged in -->
+            <span class="navbar-text me-3" *ngIf="!(userName$ | async)">
+              Welcome!
+            </span>
+            <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="container flex-grow-1 my-4">
+    <router-outlet></router-outlet> <!-- Where routed components are displayed -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <p class="col-md-6 mb-0 text-muted">
+          © {{ currentYear }} VolunteerApp | Volunteer Management System
+        </p>
+        <ul class="nav col-md-6 justify-content-end list-unstyled d-flex">
+          <li class="ms-3"><a class="text-white text-decoration-none" routerLink="/privacy">Privacy</a></li>
+          <li class="ms-3"><a class="text-white text-decoration-none" routerLink="/terms">Terms</a></li>
+          <li class="ms-3"><a class="text-white text-decoration-none" routerLink="/support">Support</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</div>

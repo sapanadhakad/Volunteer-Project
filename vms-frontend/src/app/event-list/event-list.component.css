@@ -1,0 +1,132 @@
+/* Page Title */
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Alerts */
+.alert {
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 5px;
+}
+
+/* Scrollable Events Container */
+.events-scroll-container {
+    max-height: 500px; /* Adjust height as needed */
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+/* Individual Event Card */
+.event-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Event Header */
+.event-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.event-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.event-location {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Event Body */
+.event-body p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Event Footer (Buttons) */
+.event-footer {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+/* Buttons */
+.btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-sm {
+    font-size: 12px;
+    padding: 5px 10px;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Hide Scrollbar (Optional) */
+.events-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.events-scroll-container::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 10px;
+}
+
+.events-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* No Events Message */
+p {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+}

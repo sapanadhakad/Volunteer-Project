@@ -1,0 +1,73 @@
+<div *ngIf="isLoading" class="alert alert-info">Loading event details...</div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<div *ngIf="event && !isLoading && !error">
+  <h2>Event Details</h2>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ event.name }} (ID: {{ event.id }})</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Description:</strong> {{ event.description || 'N/A' }}</li>
+        <li class="list-group-item"><strong>Location:</strong> {{ event.location || 'N/A' }}</li>
+        <!-- Use DatePipe for formatting -->
+        <p><strong>Organizer:</strong> {{ event.organizerName }}</p> <!-- <<<--- ADDED LINE -->
+
+        <li class="list-group-item"><strong>Starts:</strong> {{ event.startDateTime | date:'medium' }}</li>
+        <li class="list-group-item"><strong>Ends:</strong> {{ event.endDateTime | date:'medium' }}</li>
+        <li class="list-group-item"><strong>Slots Available:</strong> {{ event.slotsAvailable != null ?
+          event.slotsAvailable : 'N/A' }}</li>
+
+        <!-- <li class="list-group-item"><strong>volunteerid:</strong> {{ event.assignedVolunteerIds }}</li>
+        <li class="list-group-item"><strong>volunteername :</strong> {{ event.assignedVolunteerName}}</li>
+         -->
+       <!-- Find the section displaying volunteers -->
+<li class="list-group-item">
+  <strong>Assigned Volunteers:</strong>
+  <!-- Check the NEW array name and ensure it has items -->
+  <div *ngIf="event.assignedVolunteers && event.assignedVolunteers.length > 0; else noVolunteersAssigned">
+    <ul class="list-unstyled mt-2"> <!-- Use list-unstyled for cleaner look -->
+      <!-- Loop through each 'volunteer' OBJECT in the array -->
+      <li *ngFor="let volunteer of event.assignedVolunteers" class="mb-2 border-bottom pb-2">
+        <strong>{{ volunteer.name }}</strong> (ID: {{ volunteer.id }}) <br>
+        Email: {{ volunteer.email || 'N/A' }} <br>
+        Phone: {{ volunteer.phoneNumber || 'N/A' }} <br>
+        Skills: {{ volunteer.skills || 'N/A' }} <br>
+        Availability: {{ volunteer.availability || 'N/A' }}
+      </li>
+    </ul>
+  </div>
+  <!-- Template to show if the array is empty or doesn't exist -->
+  <ng-template #noVolunteersAssigned>
+    <span class="ms-2">None assigned</span> <!-- Added margin for spacing -->
+  </ng-template>
+</li>
+
+<!-- Remove the old lines that tried to display simple names/IDs directly -->
+<!-- <li class="list-group-item"><strong>volunteerid:</strong> {{ event.assignedVolunteerIds }}</li> -->
+<!-- <li class="list-group-item"><strong>volunteername :</strong> {{ event.assignedVolunteerName}}</li> -->
+        <!-- <li class="list-group-item"><strong>Assigned Volunteers:</strong>
+          <ul>
+            <li *ngFor="let volunteer of event.assignedVolunteers">{{ volunteer.assignedVolunteers }}</li>
+          </ul>
+          </li> -->
+        <!-- <li class="list-group-item"><strong>Registered Count:</strong> {{ event.registeredCount != null ? event.registeredCount : 'N/A' }}</li> -->
+        <!-- <li class="list-group-item"><strong>Registration Status:</strong> {{ event.registrationStatus }}</li> -->
+        <!-- <li class="list-group-item"><strong>Registration Error:</strong> {{ event.registrationError }}</li> -->
+
+
+        <!-- Add display for assigned volunteers if needed -->
+      </ul>
+      <div class="mt-3">
+        <a class="btn btn-primary me-2" [routerLink]="['/events', event.id, 'edit']">Edit</a>
+        <button class="btn btn-danger me-2" (click)="deleteEvent()">Delete</button>
+        <a class="btn btn-secondary" routerLink="/events">Back to List</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Optional: Not found message -->
+<div *ngIf="!event && !isLoading && !error">
+  <p>Event not found.</p>
+  <a class="btn btn-secondary" routerLink="/events">Back to List</a>
+</div>

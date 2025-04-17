@@ -1,0 +1,85 @@
+<!-- src/app/profile-edit/profile-edit.component.html -->
+<div class="profile-edit-container">
+    <h2>Edit Profile & Volunteer Information</h2>
+  
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading && !profileForm" class="loading">Loading form...</div>
+  
+    <!-- Global Error Message (for load errors or save errors) -->
+    <div *ngIf="error && !isLoading" class="alert alert-danger error-message" role="alert">
+      <p>{{ error }}</p>
+    </div>
+  
+    <!-- Edit Form - Ensure profileForm is initialized before rendering -->
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="profileForm && !isLoading">
+  
+      <!-- User Information Section -->
+      <h4>User Details</h4>
+      <div class="mb-3 form-group"> <!-- Added margin-bottom -->
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" id="name" formControlName="name" class="form-control"
+               [class.is-invalid]="name?.invalid && (name?.dirty || name?.touched)">
+        <!-- Validation Feedback -->
+        <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="invalid-feedback">
+          <small *ngIf="name?.errors?.['required']">Name is required.</small>
+          <!-- Add other name validation messages if needed -->
+        </div>
+      </div>
+  
+      <!-- Add username field if applicable -->
+      <!--
+      <div class="mb-3 form-group">
+        <label for="username" class="form-label">Username:</label>
+        <input type="text" id="username" formControlName="username" class="form-control">
+      </div>
+      -->
+  
+      <div class="mb-3 form-group">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" id="email" formControlName="email" class="form-control" readonly>
+         <small class="text-muted form-text">Email cannot be changed here.</small>
+      </div>
+  
+      <hr> <!-- Separator -->
+  
+      <!-- Volunteer Information Section -->
+      <h4>Volunteer Details</h4>
+      <p class="text-muted">Please provide your contact details and areas of interest.</p>
+  
+      <div class="mb-3 form-group">
+        <label for="phoneNumber" class="form-label">Phone Number:</label>
+        <input type="tel" id="phoneNumber" formControlName="phoneNumber" class="form-control" placeholder="e.g., 123-456-7890">
+        <!-- Add phone validation display if needed -->
+        <!-- Example:
+         <div *ngIf="phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)" class="invalid-feedback">
+          <small *ngIf="phoneNumber?.errors?.['pattern']">Please enter a valid phone number.</small>
+        </div>
+        -->
+      </div>
+  
+      <div class="mb-3 form-group">
+        <label for="availability" class="form-label">Availability:</label>
+        <textarea id="availability" formControlName="availability" class="form-control" rows="3" placeholder="e.g., Weekends, Monday evenings after 6 PM"></textarea>
+        <!-- Add availability validation display if needed -->
+      </div>
+  
+      <div class="mb-3 form-group">
+        <label for="skills" class="form-label">Skills / Interests:</label>
+        <textarea id="skills" formControlName="skills" class="form-control" rows="3" placeholder="e.g., First Aid, CPR Certified, Event Planning, Data Entry, Public Speaking, Working with children"></textarea>
+         <small class="text-muted form-text">List any relevant skills or areas you're interested in helping with.</small>
+        <!-- Add skills validation display if needed -->
+      </div>
+  
+      <!-- Action Buttons -->
+      <div class="form-actions mt-4"> <!-- Added margin-top -->
+        <button type="submit" class="btn btn-primary me-2" [disabled]="profileForm.invalid || isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          {{ isLoading ? 'Saving...' : 'Save Changes' }}
+        </button>
+        <button type="button" (click)="onCancel()" [disabled]="isLoading" class="btn btn-secondary">
+          Cancel
+        </button>
+      </div>
+  
+    </form>
+  </div>

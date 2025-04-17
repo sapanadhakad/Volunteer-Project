@@ -1,0 +1,76 @@
+<!-- Title changes based on mode -->
+<h2>{{ pageTitle }}</h2>
+
+<div *ngIf="isLoading" class="alert alert-info">Processing...</div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<form [formGroup]="volunteerForm" (ngSubmit)="onSubmit()" novalidate *ngIf="!isLoading || isEditMode">
+  <!-- Name Field -->
+  <div class="mb-3">
+    <label for="name" class="form-label">Name:</label>
+    <input
+      type="text"
+      id="name"
+      class="form-control"
+      formControlName="name"
+      required
+      [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors }"
+    />
+    <div *ngIf="f['name'].touched && f['name'].errors" class="invalid-feedback">
+      <div *ngIf="f['name'].errors?.['required']">Name is required.</div>
+      <div *ngIf="f['name'].errors?.['maxlength']">Name cannot exceed 100 characters.</div>
+    </div>
+  </div>
+
+  <!-- Email Field -->
+  <div class="mb-3">
+    <label for="email" class="form-label">Email:</label>
+    <input
+      type="email"
+      id="email"
+      class="form-control"
+      formControlName="email"
+      required
+      [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors }"
+    />
+     <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback">
+      <div *ngIf="f['email'].errors?.['required']">Email is required.</div>
+      <div *ngIf="f['email'].errors?.['email']">Invalid email format.</div>
+      <div *ngIf="f['email'].errors?.['maxlength']">Email cannot exceed 100 characters.</div>
+    </div>
+  </div>
+
+  <!-- Phone Number Field -->
+  <div class="mb-3">
+    <label for="phoneNumber" class="form-label">Phone Number:</label>
+    <input
+      type="text"
+      id="phoneNumber"
+      class="form-control"
+      formControlName="phoneNumber"
+      [ngClass]="{ 'is-invalid': f['phoneNumber'].touched && f['phoneNumber'].errors }"
+    />
+    <div *ngIf="f['phoneNumber'].touched && f['phoneNumber'].errors" class="invalid-feedback">
+      <div *ngIf="f['phoneNumber'].errors?.['maxlength']">Phone cannot exceed 20 characters.</div>
+    </div>
+  </div>
+
+   <!-- Skills Field -->
+   <div class="mb-3">
+     <label for="skills" class="form-label">Skills:</label>
+     <textarea id="skills" class="form-control" formControlName="skills" rows="3"></textarea>
+   </div>
+
+   <!-- Availability Field -->
+   <div class="mb-3">
+     <label for="availability" class="form-label">Availability:</label>
+     <textarea id="availability" class="form-control" formControlName="availability" rows="3"></textarea>
+   </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-primary me-2" [disabled]="volunteerForm.invalid || isLoading">
+      {{ isEditMode ? 'Update Volunteer' : 'Create Volunteer' }}
+    </button>
+    <button type="button" class="btn btn-secondary" routerLink="/volunteers">Cancel</button>
+  </div>
+</form>

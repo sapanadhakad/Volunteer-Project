@@ -1,0 +1,72 @@
+/* src/app/profile-edit/profile-edit.component.css */
+.profile-edit-container {
+    max-width: 700px; /* Or your preferred width */
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9; /* Light background */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333;
+  }
+  
+  h4 {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.5rem;
+      color: #555;
+  }
+  
+  .form-group {
+      margin-bottom: 1.25rem; /* Consistent spacing */
+  }
+  
+  .form-label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: block;
+  }
+  
+  /* Ensure invalid feedback shows correctly with Bootstrap */
+  .form-control.is-invalid {
+      border-color: #dc3545; /* Bootstrap's danger color */
+  }
+  .invalid-feedback {
+      display: block; /* Make sure it shows */
+      color: #dc3545;
+      font-size: 0.875em; /* Smaller font for error messages */
+      margin-top: 0.25rem;
+  }
+  
+  .form-text {
+      font-size: 0.875em;
+      color: #6c757d; /* Bootstrap's muted color */
+  }
+  
+  
+  .form-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 0.5rem; /* Space between buttons */
+  }
+  
+  /* Basic loading indicator style */
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-size: 1.2em;
+  }
+  
+  /* Basic error message style */
+  .error-message {
+    margin-bottom: 1rem;
+  }
+  
+  /* Add spinner styles if not using Bootstrap's spinner */

@@ -1,0 +1,30 @@
+<div *ngIf="isLoading" class="alert alert-info">Loading details...</div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<div *ngIf="volunteer && !isLoading && !error">
+  <h2>Volunteer Details</h2>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ volunteer.name }} (ID: {{ volunteer.id }})</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Email:</strong> {{ volunteer.email }}</li>
+        <li class="list-group-item"><strong>Phone:</strong> {{ volunteer.phoneNumber || 'N/A' }}</li>
+        <li class="list-group-item"><strong>Skills:</strong> {{ volunteer.skills || 'N/A' }}</li>
+        <li class="list-group-item"><strong>Availability:</strong> {{ volunteer.availability || 'N/A' }}</li>
+      </ul>
+      <div class="mt-3">
+        <!-- Use routerLink to navigate to the edit form -->
+        <a class="btn btn-primary me-2" [routerLink]="['/volunteers', volunteer.id, 'edit']">Edit</a>
+        <!-- Call deleteVolunteer method on click -->
+        <button class="btn btn-danger me-2" (click)="deleteVolunteer()">Delete</button>
+        <a class="btn btn-secondary" routerLink="/volunteers">Back to List</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Optional: Show a message if volunteer not found after loading -->
+<div *ngIf="!volunteer && !isLoading && !error">
+    <p>Volunteer not found.</p>
+     <a class="btn btn-secondary" routerLink="/volunteers">Back to List</a>
+</div>

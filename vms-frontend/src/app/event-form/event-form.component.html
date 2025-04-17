@@ -1,0 +1,74 @@
+<h2>{{ pageTitle }}</h2>
+
+<div *ngIf="isLoading" class="loading-indicator">Loading...</div>
+
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<!-- Disable the entire form via ngSubmit logic and canEdit flag -->
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+  <div *ngIf="authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_ORGANIZER']) | async">
+  <div class="mb-3">
+    <label for="name" class="form-label">Event Name:</label>
+    <input type="text" id="name" class="form-control" formControlName="name"
+           [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors }">
+    <div *ngIf="f['name'].touched && f['name'].errors?.['required']" class="invalid-feedback">
+      Event name is required.
+    </div>
+    <div *ngIf="f['name'].touched && f['name'].errors?.['maxlength']" class="invalid-feedback">
+      Event name cannot exceed 200 characters.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description:</label>
+    <textarea id="description" class="form-control" formControlName="description"></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label for="location" class="form-label">Location:</label>
+    <input type="text" id="location" class="form-control" formControlName="location"
+           [ngClass]="{ 'is-invalid': f['location'].touched && f['location'].errors }">
+     <div *ngIf="f['location'].touched && f['location'].errors?.['maxlength']" class="invalid-feedback">
+       Location cannot exceed 255 characters.
+     </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="startDateTime" class="form-label">Start Date & Time:</label>
+      <input type="datetime-local" id="startDateTime" class="form-control" formControlName="startDateTime"
+             [ngClass]="{ 'is-invalid': f['startDateTime'].touched && f['startDateTime'].errors }">
+      <div *ngIf="f['startDateTime'].touched && f['startDateTime'].errors?.['required']" class="invalid-feedback">
+        Start date and time are required.
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label for="endDateTime" class="form-label">End Date & Time:</label>
+      <input type="datetime-local" id="endDateTime" class="form-control" formControlName="endDateTime"
+             [ngClass]="{ 'is-invalid': f['endDateTime'].touched && f['endDateTime'].errors }">
+       <div *ngIf="f['endDateTime'].touched && f['endDateTime'].errors?.['required']" class="invalid-feedback">
+         End date and time are required.
+       </div>
+    </div>
+  </div>
+
+   <div class="mb-3">
+    <label for="slotsAvailable" class="form-label">Slots Available (optional):</label>
+    <input type="number" id="slotsAvailable" class="form-control" formControlName="slotsAvailable" min="0"
+           [ngClass]="{ 'is-invalid': f['slotsAvailable'].touched && f['slotsAvailable'].errors }">
+     <div *ngIf="f['slotsAvailable'].touched && f['slotsAvailable'].errors?.['min']" class="invalid-feedback">
+       Slots available cannot be negative.
+     </div>
+  </div>
+
+  <!-- Disable button if form is invalid OR if it's edit mode and user can't edit -->
+  <!-- ... other form elements ... -->
+
+  <button type="submit" class="btn btn-primary"
+          [disabled]="eventForm.invalid || isLoading || (isEditMode && !canEdit)">
+    {{ isEditMode ? 'Update Event' : 'Create Event' }}
+  </button>
+  <!-- Update the click handler here -->
+  <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+  </div> <!-- This closing div matches the *ngIf="authService.hasAnyRole$..." -->
+</form>

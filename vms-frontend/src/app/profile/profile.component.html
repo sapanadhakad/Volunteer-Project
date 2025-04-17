@@ -1,0 +1,43 @@
+<!-- src/app/profile/profile.component.html -->
+<div class="profile-container">
+  <!-- ... (Loading, Error) ... -->
+
+  <!-- Profile Details - Use 'user' AND 'volunteerProfile' -->
+  <div *ngIf="user && !isLoading && !error" class="profile-details">
+    <h3>{{ user.name }}</h3>
+    <p><strong>User ID:</strong> {{ user.id }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p *ngIf="user.username"><strong>Username:</strong> {{ user.username }}</p>
+
+    <!-- Display Volunteer Information -->
+    <div class="volunteer-info section-divider"> <!-- Add styling -->
+        <h4>Volunteer Information</h4>
+        <!-- Check if volunteerProfile data exists -->
+        <div *ngIf="volunteerProfile; else noVolunteerData">
+            <p><strong>Phone:</strong> {{ volunteerProfile.phoneNumber || 'Not Provided' }}</p>
+            <p><strong>Availability:</strong> {{ volunteerProfile.availability || 'Not Provided' }}</p>
+            <p><strong>Skills:</strong> {{ volunteerProfile.skills || 'Not Provided' }}</p>
+            <!-- Add other volunteer fields if needed -->
+        </div>
+        <!-- Template to show if volunteer data is missing -->
+        <ng-template #noVolunteerData>
+            <p><em>Volunteer details (phone, availability, skills) not yet provided.</em></p>
+            <!-- Prompt to add details if it's their own profile -->
+            <p *ngIf="isOwnProfile">
+                Please fill details if you want to be volunteer    
+                
+                <strong>Note:   </strong>
+                <a routerLink="/profile/edit">complete your volunteer profile</a>.
+            </p>
+        </ng-template>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="profile-actions" *ngIf="isOwnProfile">
+      <button routerLink="/profile/edit">Edit Profile & Volunteer Info</button>
+      <button (click)="deleteUser()" class="delete-button">Delete My Account</button>
+    </div>
+    <!-- ... (Admin delete button) ... -->
+  </div>
+  <!-- ... (Message if no user determined) ... -->
+</div>
